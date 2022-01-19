@@ -99,38 +99,6 @@ services:
     deploy:
         replicas: 1
 
-  tispark-master:
-    image: pingcap/tispark:latest
-    command:
-      - /opt/spark/sbin/start-master.sh
-    volumes:
-      - ./config/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
-    environment:
-      SPARK_MASTER_PORT: 7077
-      SPARK_MASTER_WEBUI_PORT: 8080
-    ports:
-      - "7077:7077"
-      - "8080:8080"
-    depends_on:
-      - "tikv"
-    deploy:
-        replicas: 1
-  tispark-slave:
-    image: pingcap/tispark:latest
-    command:
-      - /opt/spark/sbin/start-slave.sh
-      - spark://tispark-master:7077
-    volumes:
-      - ./config/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
-    environment:
-      SPARK_WORKER_WEBUI_PORT: 38081
-    ports:
-      - "38081:38081"
-    depends_on:
-      - tispark-master
-    deploy:
-        replicas: 1
-
   tidb-vision:
     image: pingcap/tidb-vision:latest
     environment:
